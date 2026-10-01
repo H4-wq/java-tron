@@ -182,8 +182,12 @@ public class ValidateMultiSignContractTest extends BaseTest {
         Assert.assertFalse("aligned bad-tail k=" + k, ret.getLeft());
         Assert.assertSame(ByteUtil.EMPTY_BYTE_ARRAY, ret.getRight());
       }
+      // Zero-length tails are valid ABI payloads for empty arrays.
+      Pair<Boolean, byte[]> ret = contract.execute(new byte[5 * 32]);
+      Assert.assertTrue("zero-length tail is valid", ret.getLeft());
+      Assert.assertArrayEquals(DataWord.ZERO().getData(), ret.getRight());
       // Null calldata: explicit spec clause.
-      Pair<Boolean, byte[]> ret = contract.execute(null);
+      ret = contract.execute(null);
       Assert.assertFalse("null calldata", ret.getLeft());
       Assert.assertSame(ByteUtil.EMPTY_BYTE_ARRAY, ret.getRight());
     } finally {

@@ -434,7 +434,10 @@ public class PrecompiledContracts {
       return false;
     }
     long tail = subtractExact(data.length, multiplyExact(headerWords, WORD_SIZE));
-    return tail > 0 && tail % multiplyExact(itemWords, WORD_SIZE) == 0;
+    if (tail < 0) {
+      return false;
+    }
+    return tail % multiplyExact(itemWords, WORD_SIZE) == 0;
   }
 
   public abstract static class PrecompiledContract {
